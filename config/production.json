@@ -1,0 +1,24 @@
+{
+  "appUrl": "localhost:8080",
+  "tokenSecretKey": "vinacann",
+  "mongo": {
+    "url": "mongodb://localhost",
+    "database": "vinacann",
+    "options": {
+      "user": "",
+      "pass": ""
+    }
+  },
+  "facebookApp": {
+    "appId": "",
+    "appSecret": ""
+  },
+  "googleApp": {
+    "clientId": "",
+    "clientSecret": ""
+  },
+  "email": {
+    "user": "",
+    "pass": ""
+  }
+}
