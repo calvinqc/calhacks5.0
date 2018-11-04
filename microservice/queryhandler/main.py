@@ -35,7 +35,7 @@ def populate_data():
     recipes = []
     ingredients_names = {}
     ingredients_nums = {}
-    food_sets = []
+    food_sets = {}
     ing_counter = 0
 
     arr = response.json()
@@ -48,7 +48,7 @@ def populate_data():
                 ingredients_nums[ing_counter] = ing
                 ing_counter += 1
             s.append(ingredients_names.get(ing))
-        food_sets.append(s)
+        food_sets[a['id']] = s
     return (recipes, ingredients_names, ingredients_nums, food_sets)
 
 def find(query, ingredients_names, food_sets):
