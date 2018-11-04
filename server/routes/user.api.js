@@ -43,9 +43,10 @@ function register(email, password, blockChainAddress) {
             console.log("Successfully sent account confirmation email!");
             // add this new user to the Database because User in Mongo Stitch only contain EMAIL & PASSWORD
             let newUser = {
-              email: email,
-              password: password,
-              blockChainAddress: blockChainAddress
+                email: email,
+                password: password,
+                blockChainAddress: blockChainAddress,
+                resetPasswordToken: "",
             };
             mongodb.db('vinacann').collection('user').insertOne(newUser);
         })
@@ -54,7 +55,7 @@ function register(email, password, blockChainAddress) {
         });
 }
 
-function resetPassword(email) {
+function sendResetPasswordLink(email) {
     emailPassClient.sendResetPasswordEmail(email).then(() => {
         console.log("Successfully sent password reset email!");
     }).catch(err => {
@@ -62,8 +63,28 @@ function resetPassword(email) {
     });
 }
 
+function resetPassword(password) {
+    // Parse the URL query parameters
+    const url = window.location.search;
+    const params = new URLSearchParams(url);
+
+    let token = params.get('token');
+    let tokenId = params.get('tokenId');
+    const newPassword = password;
+
+    // Confirm the user's email/password account
+    const emailPassClient = Stitch.defaultAppClient.auth
+        .getProviderClient(UserPasswordAuthProviderClient.factory);
+
+    emailPassClient.resetPassword(token, tokenId, newPassword).then(() => {
+        console.log("Successfully reset password!");
+    }).catch(err => {
+        console.log("Error resetting password:", err);
+    });
+}
+
 /**
- * Login with Facebook
+ * Login with Google
  */
 function loginWithGoogle() {
     const credential = new GoogleRedirectCredential();
@@ -71,7 +92,6 @@ function loginWithGoogle() {
         return stitchClient.auth.loginWithRedirect(credential);
     } else if(stitchClient.auth.hasRedirectResult()) {
         return stitchClient.auth.handleRedirectResult().then(user => {
-            console.log(user.profile.data);
             let data = {
                 firstName: user.profile.data.first_name,
                 lastName: user.profile.data.last_name,
@@ -79,12 +99,8 @@ function loginWithGoogle() {
                 picture: user.profile.data.picture,
                 // blockChainAddress:
             };
-            console.log(data);
             mongodb.db('vinacann').collection('user')
                 .insertOne(data)
         });
     }
-    return stitchClient.auth.loginWithRedirect(credential);;
-
-
 }

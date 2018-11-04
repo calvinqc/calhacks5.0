@@ -25,6 +25,7 @@
         RemoteMongoClient,
         UserPasswordCredential,
         GoogleRedirectCredential,
+        UserPasswordAuthProviderClient,
     } = stitch;
 
     // Initialize a MongoDB Service Client
@@ -33,6 +34,8 @@
         RemoteMongoClient.factory,
         'mongodb-atlas'
     );
+    const emailPassClient = Stitch.defaultAppClient.auth
+        .getProviderClient(UserPasswordAuthProviderClient.factory);
 
     login('cuongnguyen5996@gmail.com', 'q1w2e3r4')
         .then(() => {
@@ -42,7 +45,15 @@
         }).then(displayContacts)
 
     // console.log(addRecipeToFavorite(1, "Hi"));
-    console.log(getListOfFavRecipeBasedOnUserId(1));
+    console.log(getListOfFavRecipeBasedOnUserId("1").forEach((res) => {
+        console.log(res);
+    }));
+
+    // let popRecipe = displayPopularRecipe().then((res) => {
+    //     console.log(res);
+    // });
+
+    resetPassword('cuongvqnguyen@gmail.com');
 
     function login(email, password) {
         const credential = new GoogleRedirectCredential();
@@ -73,16 +84,49 @@
     }
 
     function getListOfFavRecipeBasedOnUserId(userID) {
+        let list = [];
         mongodb.db('vinacann')
             .collection('favoriteRecipe')
             .find({userID: userID})
             .asArray()
             .then(res => {
-                console.log(res);
-                // return mongodb.db('vinacann')
-                //     .collection('recipe')
-                //     .find({id: res.recipeID})
-                //     .asArray()
+                res.forEach(async (data) => {
+                    let result = await getRecipe(data);
+                    list.push(result);
+                })
             })
+        return list;
+    }
+
+    function getRecipe(data) {
+        return mongodb.db('vinacann')
+            .collection('recipe')
+            .aggregate([
+                {$match: {'myData.id': data.recipeID}},
+                {$project: {
+                        myResult: {$filter: {
+                                input: '$myData',
+                                as: 'data',
+                                cond: {$eq: ['$$data.id', data.recipeID]}
+                            }},
+                        _id: 0
+                    }}
+            ])
+            .asArray()
+    }
+
+    function displayPopularRecipe() {
+        return mongodb.db('vinacann')
+            .collection('recipe')
+            .find({})
+            .asArray()
+    }
+
+    function resetPassword(email) {
+        emailPassClient.sendResetPasswordEmail(email).then(() => {
+            console.log("Successfully sent password reset email!");
+        }).catch(err => {
+            console.log("Error sending password reset email:", err);
+        });
     }
 </script>

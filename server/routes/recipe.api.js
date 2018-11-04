@@ -27,6 +27,30 @@ function addRecipeToFavorite(userID, recipeID) {
 }
 
 function displayPopularRecipe() {
-
+    return mongodb.db('vinacann')
+        .collection('recipe')
+        .find({})
+        .asArray()
 
 }
+
+function getRecipe(data) {
+    return mongodb.db('vinacann')
+        .collection('recipe')
+        .aggregate([
+            {$match: {'myData.id': data.recipeID}},
+            {$project: {
+                    myResult: {$filter: {
+                            input: '$myData',
+                            as: 'data',
+                            cond: {$eq: ['$$data.id', data.recipeID]}
+                        }},
+                    _id: 0
+                }}
+        ])
+        .asArray()
+}
+
+
+
+
