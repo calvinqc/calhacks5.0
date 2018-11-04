@@ -5,9 +5,12 @@ import {
     Stitch,
     RemoteMongoClient,
     UserPasswordCredential,
-    UserPasswordAuthProviderClient
+    UserPasswordAuthProviderClient,
+    GoogleRedirectCredential,
+    FacebookRedirectCredential,
 } from 'mongodb-stitch-browser-sdk'
 
+loginWithGoogle();
 /**
  * Initialize a MongoDB Service Client
  */
@@ -60,7 +63,10 @@ function resetPassword(email) {
 }
 
 function displayPopularRecipe() {
-
+    if (!stitchClient.auth.isLoggedIn) {
+        const credential = new FacebookRedirectCredential();
+        Stitch.defaultAppClient.auth.loginWithRedirect(credential);
+    }
 }
 
 
@@ -68,13 +74,20 @@ function displayPopularRecipe() {
  * Login with Facebook
  */
 function loginWithFacebook() {
-
+    if (!stitchClient.auth.isLoggedIn) {
+        const credential = new FacebookRedirectCredential();
+        Stitch.defaultAppClient.auth.loginWithRedirect(credential);
+    }
 }
 
 /**
  * Login with Facebook
  */
 function loginWithGoogle() {
-
+    console.log("Hye");
+    if (!stitchClient.auth.isLoggedIn) {
+        const credential = new GoogleRedirectCredential();
+        stitchClient.auth.loginWithRedirect(credential);
+    }
 
 }
