@@ -1,0 +1,27 @@
+{
+  "name": "calhack5.0",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "ejs": "^2.6.1",
+    "express": "^4.16.4",
+    "express-session": "^1.15.6",
+    "mongodb-stitch-browser-sdk": "^4.0.14-5",
+    "mongoose": "^5.3.9",
+    "mongoose-timestamp": "^0.6.0",
+    "qa": "0.0.1"
+  },
+  "scripts": {
+    "start": "node server/server.js"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ]
+}
