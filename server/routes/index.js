@@ -5,7 +5,7 @@ const loadAllRoutes = (app) => {
 
     // HomePage
     app.get("/", function(req, res) {
-        res.render('../index');
+        res.render('../views/index');
     });
 
 
