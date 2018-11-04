@@ -59,6 +59,11 @@ function resetPassword(email) {
     });
 }
 
+function displayPopularRecipe() {
+
+}
+
+
 /**
  * Login with Facebook
  */
