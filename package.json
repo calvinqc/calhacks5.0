@@ -3,23 +3,17 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "body-parser": "^1.18.3",
-    "ejs": "^2.6.1",
-    "express": "^4.16.4",
-    "express-session": "^1.15.6",
-    "mongodb-stitch-browser-sdk": "^4.0.14-5",
-    "mongoose": "^5.3.9",
-    "mongoose-timestamp": "^0.6.0",
-    "qa": "0.0.1",
-    "react": "^16.6.0",
-    "react-dom": "^16.6.0",
-    "react-scripts": "2.1.1"
+    "concurrently": "*",
+    "nodemon": "*"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "install-client": "cd client && npm install",
+    "install-server": "cd server && npm install",
+    "client": "npm start --prefix client",
+    "server": "nodemon --watch server",
+    "microservice": "cd microservice && python manage.py runserver",
+    "initial-start": "npm install && npm run install-client && npm run install-server && npm run start",
+    "start": "concurrently \"npm run client\" \"node server/app.js\" \"npm run microservice\""
   },
   "eslintConfig": {
     "extends": "react-app"
