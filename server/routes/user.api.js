@@ -10,7 +10,7 @@ import {
     FacebookRedirectCredential,
 } from 'mongodb-stitch-browser-sdk'
 
-loginWithGoogle();
+exports = loginWithGoogle();
 /**
  * Initialize a MongoDB Service Client
  */
@@ -62,32 +62,29 @@ function resetPassword(email) {
     });
 }
 
-function displayPopularRecipe() {
-    if (!stitchClient.auth.isLoggedIn) {
-        const credential = new FacebookRedirectCredential();
-        Stitch.defaultAppClient.auth.loginWithRedirect(credential);
-    }
-}
-
-
-/**
- * Login with Facebook
- */
-function loginWithFacebook() {
-    if (!stitchClient.auth.isLoggedIn) {
-        const credential = new FacebookRedirectCredential();
-        Stitch.defaultAppClient.auth.loginWithRedirect(credential);
-    }
-}
-
 /**
  * Login with Facebook
  */
 function loginWithGoogle() {
-    console.log("Hye");
+    const credential = new GoogleRedirectCredential();
     if (!stitchClient.auth.isLoggedIn) {
-        const credential = new GoogleRedirectCredential();
-        stitchClient.auth.loginWithRedirect(credential);
+        return stitchClient.auth.loginWithRedirect(credential);
+    } else if(stitchClient.auth.hasRedirectResult()) {
+        return stitchClient.auth.handleRedirectResult().then(user => {
+            console.log(user.profile.data);
+            let data = {
+                firstName: user.profile.data.first_name,
+                lastName: user.profile.data.last_name,
+                email: user.profile.data.email,
+                picture: user.profile.data.picture,
+                // blockChainAddress:
+            };
+            console.log(data);
+            mongodb.db('vinacann').collection('user')
+                .insertOne(data)
+        });
     }
+    return stitchClient.auth.loginWithRedirect(credential);;
+
 
 }
