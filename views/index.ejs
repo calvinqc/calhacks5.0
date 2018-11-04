@@ -1,0 +1,88 @@
+<!-- Base Stitch Browser SDK -->
+<script src='https://s3.amazonaws.com/stitch-sdks/js/bundles/4.0.8/stitch.js'></script>
+
+<div class='results-bar'>
+    <p>Count of Results:</p>
+    <span id='num-results' class='results-bar__count'></span>
+</div>
+<table class='table table-striped'>
+    <thead class='thead'>
+    <tr>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Gender</th>
+        <th>IP Address</th>
+    </tr>
+    </thead>
+    <tbody id='contacts'></tbody>
+</table>
+
+<!--<script src="../server/recipe.api.js" language="JavaScript"></script>-->
+<!--<script src="../server/user.api.js" language="JavaScript"></script>-->
+<script language=javascript>
+    const {
+        Stitch,
+        RemoteMongoClient,
+        UserPasswordCredential,
+        GoogleRedirectCredential,
+    } = stitch;
+
+    // Initialize a MongoDB Service Client
+    const stitchClient = Stitch.initializeDefaultAppClient('vinacann-vceuu');
+    const mongodb = stitchClient.getServiceClient(
+        RemoteMongoClient.factory,
+        'mongodb-atlas'
+    );
+
+    login('cuongnguyen5996@gmail.com', 'q1w2e3r4')
+        .then(() => {
+            return mongodb.db('vinacann').collection('contacts')
+                .find({})
+                .asArray();
+        }).then(displayContacts)
+
+    // console.log(addRecipeToFavorite(1, "Hi"));
+    console.log(getListOfFavRecipeBasedOnUserId(1));
+
+    function login(email, password) {
+        const credential = new GoogleRedirectCredential();
+        if (!stitchClient.auth.isLoggedIn) {
+            return stitchClient.auth.loginWithRedirect(credential);
+        } else if(stitchClient.auth.hasRedirectResult()) {
+            return stitchClient.auth.handleRedirectResult();
+        }
+        return stitchClient.auth.loginWithRedirect(credential);
+    }
+
+
+    function displayContacts(contacts) {
+        const contactsTableBody = document.getElementById('contacts');
+        const numResultsEl = document.getElementById('num-results');
+        const tableRows = contacts.map(contact => {
+            return `
+      <tr>
+        <td>${contact.first_name}, ${contact.last_name}</td>
+        <td>${contact.email}</td>
+        <td>${contact.gender}</td>
+        <td>${contact.ip_address}</td>
+      </tr>
+    `;
+        });
+        contactsTableBody.innerHTML = tableRows.join('');
+        numResultsEl.innerHTML = contacts.length;
+    }
+
+    function getListOfFavRecipeBasedOnUserId(userID) {
+        mongodb.db('vinacann')
+            .collection('favoriteRecipe')
+            .find({userID: userID})
+            .asArray()
+            .then(res => {
+                console.log(res);
+                // return mongodb.db('vinacann')
+                //     .collection('recipe')
+                //     .find({id: res.recipeID})
+                //     .asArray()
+            })
+    }
+</script>

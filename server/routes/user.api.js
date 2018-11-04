@@ -5,9 +5,12 @@ import {
     Stitch,
     RemoteMongoClient,
     UserPasswordCredential,
-    UserPasswordAuthProviderClient
+    UserPasswordAuthProviderClient,
+    GoogleRedirectCredential,
+    FacebookRedirectCredential,
 } from 'mongodb-stitch-browser-sdk'
 
+exports = loginWithGoogle();
 /**
  * Initialize a MongoDB Service Client
  */
@@ -62,14 +65,26 @@ function resetPassword(email) {
 /**
  * Login with Facebook
  */
-function loginWithFacebook() {
-
-}
-
-/**
- * Login with Facebook
- */
 function loginWithGoogle() {
+    const credential = new GoogleRedirectCredential();
+    if (!stitchClient.auth.isLoggedIn) {
+        return stitchClient.auth.loginWithRedirect(credential);
+    } else if(stitchClient.auth.hasRedirectResult()) {
+        return stitchClient.auth.handleRedirectResult().then(user => {
+            console.log(user.profile.data);
+            let data = {
+                firstName: user.profile.data.first_name,
+                lastName: user.profile.data.last_name,
+                email: user.profile.data.email,
+                picture: user.profile.data.picture,
+                // blockChainAddress:
+            };
+            console.log(data);
+            mongodb.db('vinacann').collection('user')
+                .insertOne(data)
+        });
+    }
+    return stitchClient.auth.loginWithRedirect(credential);;
 
 
 }
