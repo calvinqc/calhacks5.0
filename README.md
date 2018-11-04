@@ -14,7 +14,7 @@ You will also see any lint errors in the console.
 
 ## Inspiration
 Have you ever found yourself tossing away the old food that you bought 2 weeks ago and somehow did not use it until it went rotten? We have, too, and we understand how hurt it feels. As college students, we are aware of how valuable food is and that wasting food and money is not what we all want to do. Especially because food is one of the most essential but limited resources that every each of us needs.
-Therefore, we created "Walecumo!" ("Waste Less, Cook More!") - a web application that can help you reduce food waste by showing you a variety of recipes using the ingredients you have in your fridge and also gives you access to many more awesome cooking recipes!
+Therefore, we created "Walecumo!" ("Waste Less, Cook More!") - a decetralized application that can help you reduce food waste by showing you a variety of recipes using the ingredients you have in your fridge and also gives you access to many more awesome cooking recipes!
 Moreover, "Walecumo!" is also a platform for qualified chefs that want to share their secret recipes/ingredients by selling their recipes to those who are interested. We added this feature by using the new technology called Blockchain to also promote Original Recipes Protection, which is meant for preventing plagiarism.
 
 ## How "Walecumo!" works
